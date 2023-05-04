@@ -1,20 +1,23 @@
-from flask import (
-    Flask,
-    render_template,
-    request,
-    jsonify,
-    redirect,
-    url_for
-)
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+from datetime import datetime
 import certifi
+
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from pymongo import MongoClient
 
-app = Flask(__name__)
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
-password = 'colosal'
-cxn_str = f'mongodb+srv://test:{password}@cluster0.pttqnas.mongodb.net/?retryWrites=true&w=majority'
-client = MongoClient(cxn_str)
-db = client.project03
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
+
+client = MongoClient(MONGODB_URI)
+
+db = client[DB_NAME]
+
+app = Flask(__name__)
 
 @app.route('/')
 def main():
